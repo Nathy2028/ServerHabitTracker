@@ -31,15 +31,18 @@ export async function createHabit(habit) {
 }
 
 export async function updateHabit(id, habit) {
+  const updates = {
+    updated_at: new Date().toISOString()
+  }
+
+  if (habit.name !== undefined) updates.name = habit.name.trim()
+  if (habit.description !== undefined) updates.description = habit.description.trim()
+  if (habit.frequency !== undefined) updates.frequency = habit.frequency
+  if (habit.completed !== undefined) updates.completed = habit.completed
+
   const { data, error } = await supabase
     .from('habits')
-    .update({
-      name: habit.name.trim(),
-      description: habit.description.trim(),
-      frequency: habit.frequency,
-      completed: habit.completed,
-      updated_at: new Date().toISOString()
-    })
+    .update(updates)
     .eq('id', id)
     .select()
     .single()
