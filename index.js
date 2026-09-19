@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { createHabit, deleteHabit, getHabits, updateHabit } from './services/habitsApi.js'
+import { createHabit, deleteHabit, getHabits, toggleHabit, updateHabit } from './services/habitsApi.js'
 
 const app = express()
 const port = Number(process.env.PORT || 3001)
@@ -31,6 +31,14 @@ app.post('/api/habits', async (request, response, next) => {
 app.patch('/api/habits/:id', async (request, response, next) => {
   try {
     response.json(await updateHabit(request.params.id, request.body))
+  } catch (error) {
+    next(error)
+  }
+})
+
+app.patch('/api/habits/:id/toggle', async (request, response, next) => {
+  try {
+    response.json(await toggleHabit(request.params.id))
   } catch (error) {
     next(error)
   }

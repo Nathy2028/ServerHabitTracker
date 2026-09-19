@@ -51,6 +51,17 @@ export async function updateHabit(id, habit) {
   return data
 }
 
+export async function toggleHabit(id) {
+  const { data: habit, error } = await supabase
+    .from('habits')
+    .select('completed')
+    .eq('id', id)
+    .single()
+
+  checkError(error, 'No se pudo encontrar el habito')
+  return updateHabit(id, { completed: !habit.completed })
+}
+
 export async function deleteHabit(id) {
   const { error } = await supabase
     .from('habits')
