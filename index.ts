@@ -6,13 +6,16 @@ import type { CreateHabitInput, Habit, UpdateHabitInput } from './types.js'
 const app = express()
 const port = Number(process.env.PORT || 3001)
 
+// Configura los middlewares necesarios para recibir peticiones JSON.
 app.use(cors())
 app.use(express.json())
 
+// Permite comprobar rapidamente que la API esta disponible.
 app.get('/api/health', (_request: Request, response: Response<{ ok: boolean }>) => {
   response.json({ ok: true })
 })
 
+// Devuelve todos los habitos guardados.
 app.get('/api/habits', async (_request: Request, response: Response<Habit[]>, next) => {
   try {
     response.json(await getHabits())
@@ -21,6 +24,7 @@ app.get('/api/habits', async (_request: Request, response: Response<Habit[]>, ne
   }
 })
 
+// Crea un nuevo habito y devuelve el registro creado.
 app.post('/api/habits', async (
   request: Request<Record<string, never>, Habit, CreateHabitInput>,
   response: Response<Habit>,
@@ -33,6 +37,7 @@ app.post('/api/habits', async (
   }
 })
 
+// Modifica los datos enviados para un habito existente.
 app.patch('/api/habits/:id', async (
   request: Request<{ id: string }, Habit, UpdateHabitInput>,
   response: Response<Habit>,
@@ -45,6 +50,7 @@ app.patch('/api/habits/:id', async (
   }
 })
 
+// Cambia el estado de completado del habito indicado.
 app.patch('/api/habits/:id/toggle', async (
   request: Request<{ id: string }, Habit>,
   response: Response<Habit>,
@@ -57,6 +63,7 @@ app.patch('/api/habits/:id/toggle', async (
   }
 })
 
+// Elimina un habito por su identificador.
 app.delete('/api/habits/:id', async (
   request: Request<{ id: string }>,
   response: Response<void>,
@@ -70,6 +77,7 @@ app.delete('/api/habits/:id', async (
   }
 })
 
+// Centraliza los errores para devolver siempre una respuesta clara.
 const errorHandler: ErrorRequestHandler = (error: unknown, _request, response, _next) => {
   console.error(error)
   const message = error instanceof Error ? error.message : 'Error interno del servidor'
@@ -78,6 +86,7 @@ const errorHandler: ErrorRequestHandler = (error: unknown, _request, response, _
 
 app.use(errorHandler)
 
+// Inicia el servidor en el puerto configurado.
 app.listen(port, () => {
   console.log(`API de hábitos escuchando en http://localhost:${port}`)
 })

@@ -6,11 +6,13 @@ function checkError(error: PostgrestError | null, message: string): void {
   if (error) throw new Error(error.message || message)
 }
 
+// Evita devolver una respuesta vacia cuando Supabase no encuentra el registro.
 function requireData<T>(data: T | null, message: string): T {
   if (data === null) throw new Error(message)
   return data
 }
 
+// Obtiene los habitos mas recientes primero para mostrarlos en la aplicacion.
 export async function getHabits(): Promise<Habit[]> {
   const { data, error } = await supabase
     .from('habits')
@@ -21,6 +23,7 @@ export async function getHabits(): Promise<Habit[]> {
   return data || []
 }
 
+// Limpia los textos antes de guardar un nuevo habito.
 export async function createHabit(habit: CreateHabitInput): Promise<Habit> {
   const { data, error } = await supabase
     .from('habits')
@@ -37,6 +40,7 @@ export async function createHabit(habit: CreateHabitInput): Promise<Habit> {
   return requireData(data, 'No se pudo crear el habito')
 }
 
+// Actualiza solo los campos que vienen incluidos en la peticion.
 export async function updateHabit(id: string, habit: UpdateHabitInput): Promise<Habit> {
   const updates: HabitUpdate = {
     updated_at: new Date().toISOString()
@@ -58,6 +62,7 @@ export async function updateHabit(id: string, habit: UpdateHabitInput): Promise<
   return requireData(data, 'No se pudo editar el habito')
 }
 
+// Consulta el estado actual y lo cambia por su valor contrario.
 export async function toggleHabit(id: string): Promise<Habit> {
   const { data: habit, error } = await supabase
     .from('habits')
@@ -70,6 +75,7 @@ export async function toggleHabit(id: string): Promise<Habit> {
   return updateHabit(id, { completed: !currentHabit.completed })
 }
 
+// Elimina el habito usando su identificador unico.
 export async function deleteHabit(id: string): Promise<boolean> {
   const { error } = await supabase
     .from('habits')
