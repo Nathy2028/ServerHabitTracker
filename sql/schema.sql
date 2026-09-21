@@ -2,6 +2,7 @@
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+-- Guarda los datos principales de cada habito y sus fechas de control.
 CREATE TABLE IF NOT EXISTS habits (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(120) NOT NULL CHECK (length(trim(name)) > 0),
@@ -11,6 +12,7 @@ CREATE TABLE IF NOT EXISTS habits (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Acelera las consultas que filtran por el estado de completado.
 CREATE INDEX IF NOT EXISTS idx_habits_completed ON habits (completed);
 
 -- Keep updated_at current whenever a habit is modified.

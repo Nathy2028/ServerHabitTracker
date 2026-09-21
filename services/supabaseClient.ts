@@ -5,8 +5,10 @@ import type { Database } from '../types.js'
 const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
 const key = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
 
+// Detiene el servidor si la conexion no esta configurada correctamente.
 if (!url || !key) {
   throw new Error('Faltan las variables de entorno de Supabase')
 }
 
+// Cliente tipado para consultar la base de datos de habitos.
 export const supabase = createClient<Database>(url, key)

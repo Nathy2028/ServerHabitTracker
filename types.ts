@@ -1,3 +1,4 @@
+// Representa un habito completo tal como se guarda en la base de datos.
 export type Habit = {
   id: string
   name: string
@@ -8,6 +9,7 @@ export type Habit = {
   updated_at: string
 }
 
+// Campos permitidos al insertar un nuevo habito.
 export type HabitInsert = {
   name: string
   description: string
@@ -15,6 +17,7 @@ export type HabitInsert = {
   completed?: boolean
 }
 
+// Campos opcionales que pueden modificarse posteriormente.
 export type HabitUpdate = {
   name?: string
   description?: string
@@ -23,6 +26,7 @@ export type HabitUpdate = {
   updated_at?: string
 }
 
+// Estructura tipada que utiliza Supabase para validar las consultas.
 export type Database = {
   public: {
     Tables: {
@@ -40,10 +44,12 @@ export type Database = {
   }
 }
 
+// Datos que recibe la API al crear un habito.
 export type CreateHabitInput = {
   name: string
   description: string
   frequency: string
 }
 
+// Reutiliza los campos actualizables para las peticiones PATCH.
 export type UpdateHabitInput = HabitUpdate
